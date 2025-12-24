@@ -1,0 +1,10 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[branch "home-component"]
+	gk-last-accessed = 2025-12-24T18:21:58.919Z
+	gk-last-modified = 2025-12-24T18:21:58.919Z
