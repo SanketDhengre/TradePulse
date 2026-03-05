@@ -1,19 +1,20 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+const fs = require('fs');
+
+const frontendCssPath = 'C:/Sanket Projects/TradePulse/frontend/src/index.css';
+const dashboardCssPath = 'C:/Sanket Projects/TradePulse/dashboard/src/index.css';
+
+function cleanAndRead(filePath) {
+  let content = fs.readFileSync(filePath, 'utf8');
+  if (content.includes('/* --- TRADEPULSE PREMIUM DARK THEME --- */')) {
+    content = content.split('/* --- TRADEPULSE PREMIUM DARK THEME --- */')[0];
+  }
+  return content;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+let frontendCss = cleanAndRead(frontendCssPath);
+let dashboardCss = cleanAndRead(dashboardCssPath);
 
-
-
+const premiumCSS = `
 /* --- TRADEPULSE SILICON VALLEY PREMIUM THEME --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
 
@@ -249,3 +250,8 @@ canvas {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+`;
+
+fs.writeFileSync(frontendCssPath, frontendCss + '\n' + premiumCSS);
+fs.writeFileSync(dashboardCssPath, dashboardCss + '\n' + premiumCSS);
+console.log('Silicon Valley styling applied!');

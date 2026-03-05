@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
@@ -8,6 +8,7 @@ import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
 const BuyActionWindow = ({ uid }) => {
+    const context = useContext(GeneralContext);
     const [stockQuantity, setStockQuantity] = useState(1);
     const [stockPrice, setStockPrice] = useState(0.0);
 
@@ -30,7 +31,7 @@ const BuyActionWindow = ({ uid }) => {
                 { headers: { Authorization: `Bearer ${token}` } }
             )
             .then(() => {
-                GeneralContext.closeBuyWindow();
+                context.closeBuyWindow();
             })
             .catch((err) => {
                 console.error(err);
@@ -39,7 +40,7 @@ const BuyActionWindow = ({ uid }) => {
     };
 
     const handleCancelClick = () => {
-        GeneralContext.closeBuyWindow();
+        context.closeBuyWindow();
     };
 
     return (

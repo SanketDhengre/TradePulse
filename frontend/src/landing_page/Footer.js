@@ -2,13 +2,13 @@ import React from "react";
 
 function Footer() {
     return (
-        <footer style={{ backgroundColor: "rgb(250, 250, 250)" }}>
+        <footer className="footer" style={{ backgroundColor: "var(--bg-panel)" }}>
             <div className="container border-top mt-5">
                 <div className="row mt-5">
                     <div className="col">
                         <img
                             src="media/images/logo.svg"
-                            style={{ width: "50%" }}
+                            style={{ height: "40px", marginBottom: "20px" }}
                         />
                         <p>
                             &copy; 2010 - 2024, Not TradePulse Broking Ltd. All
