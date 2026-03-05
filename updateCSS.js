@@ -1,17 +1,6 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+const fs = require('fs');
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
+const darkThemeCSS = `
 /* --- TRADEPULSE PREMIUM DARK THEME --- */
 :root {
   --bg-color: #0b0e14;
@@ -102,3 +91,11 @@ a:hover {
 form p, form label {
   color: var(--text-primary) !important;
 }
+`;
+
+const frontendCssPath = 'C:/Sanket Projects/TradePulse/frontend/src/index.css';
+const dashboardCssPath = 'C:/Sanket Projects/TradePulse/dashboard/src/index.css';
+
+fs.appendFileSync(frontendCssPath, darkThemeCSS);
+fs.appendFileSync(dashboardCssPath, darkThemeCSS);
+console.log('CSS updated successfully.');
