@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Signup() {
-    const [name, setName] = useState("");
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -12,13 +11,13 @@ function Signup() {
         e.preventDefault();
         setError("");
         try {
-            const res = await fetch("http://localhost:3002/signup", {
+            const res = await fetch("http://localhost:3002/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ email, password }),
             });
             const data = await res.json();
-            if (!res.ok) return setError(data.error || "Signup failed");
+            if (!res.ok) return setError(data.error || "Login failed");
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
             navigate("/");
@@ -29,17 +28,8 @@ function Signup() {
 
     return (
         <div className="container mt-5">
-            <h2>Sign up</h2>
+            <h2>Login</h2>
             <form onSubmit={handleSubmit} style={{ maxWidth: 480 }}>
-                <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
-                        className="form-control"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
-                </div>
                 <div className="mb-3">
                     <label className="form-label">Email</label>
                     <input
@@ -62,11 +52,11 @@ function Signup() {
                 </div>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <button className="btn btn-primary" type="submit">
-                    Create account
+                    Sign in
                 </button>
             </form>
         </div>
     );
 }
 
-export default Signup;
+export default Login;

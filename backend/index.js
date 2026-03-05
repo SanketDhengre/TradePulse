@@ -9,6 +9,9 @@ const { HoldingsModel } = require("./model/HoldingsModel");
 
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
+const { UsersModel } = require("./model/UsersModel");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const PORT = process.env.PORT || 3002;
 const uri = process.env.MONGO_URI;
@@ -17,6 +20,79 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Auth middleware
+function authenticateToken(req, res, next) {
+    const authHeader =
+        req.headers["authorization"] || req.headers["Authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+    jwt.verify(token, process.env.JWT_SECRET || "secret", (err, user) => {
+        if (err) return res.status(403).json({ error: "Forbidden" });
+        req.user = user;
+        next();
+    });
+}
+
+// Auth: Signup
+app.post("/signup", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        if (!name || !email || !password)
+            return res.status(400).json({ error: "Missing fields" });
+
+        const existing = await UsersModel.findOne({ email });
+        if (existing)
+            return res.status(400).json({ error: "Email already in use" });
+
+        const passwordHash = await bcrypt.hash(password, 10);
+        const user = new UsersModel({ name, email, passwordHash });
+        await user.save();
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET || "secret",
+            { expiresIn: "7d" }
+        );
+        res.json({
+            token,
+            user: { id: user._id, name: user.name, email: user.email },
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// Auth: Login
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password)
+            return res.status(400).json({ error: "Missing fields" });
+
+        const user = await UsersModel.findOne({ email });
+        if (!user)
+            return res.status(400).json({ error: "Invalid credentials" });
+
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        if (!ok) return res.status(400).json({ error: "Invalid credentials" });
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET || "secret",
+            { expiresIn: "7d" }
+        );
+        res.json({
+            token,
+            user: { id: user._id, name: user.name, email: user.email },
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 // app.get("/addHoldings", async (req, res) => {
 //     let tempHoldings = [
@@ -187,27 +263,32 @@ app.use(bodyParser.json());
 //     res.send("Done!");
 // });
 
-app.get("/allHoldings", async (req, res) => {
+app.get("/allHoldings", authenticateToken, async (req, res) => {
     let allHoldings = await HoldingsModel.find({});
     res.json(allHoldings);
 });
 
-app.get("/allPositions", async (req, res) => {
+app.get("/allPositions", authenticateToken, async (req, res) => {
     let allPositions = await PositionsModel.find({});
     res.json(allPositions);
 });
 
-app.post("/newOrder", async (req, res) => {
-    let newOrder = new OrdersModel({
-        name: req.body.name,
-        qty: req.body.qty,
-        price: req.body.price,
-        mode: req.body.mode,
-    });
+app.post("/newOrder", authenticateToken, async (req, res) => {
+    try {
+        let newOrder = new OrdersModel({
+            name: req.body.name,
+            qty: req.body.qty,
+            price: req.body.price,
+            mode: req.body.mode,
+            user: req.user.id,
+        });
 
-    newOrder.save();
-
-    res.send("Order saved!");
+        await newOrder.save();
+        res.json({ message: "Order saved!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 app.listen(PORT, () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios, { all } from "axios";
+import axios from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 
 // import { holdings } from "../data/data";
@@ -7,11 +7,26 @@ import { VerticalGraph } from "./VerticalGraph";
 const Holdings = () => {
     const [allHoldings, setAllHoldings] = useState([]);
 
+    const [isAuthed, setIsAuthed] = useState(false);
+
     useEffect(() => {
-        axios.get("http://localhost:3002/allHoldings").then((res) => {
-            // console.log(res.data);
-            setAllHoldings(res.data);
-        });
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setIsAuthed(false);
+            return;
+        }
+        setIsAuthed(true);
+        axios
+            .get("http://localhost:3002/allHoldings", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then((res) => {
+                setAllHoldings(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                setIsAuthed(false);
+            });
     }, []);
 
     // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -46,7 +61,15 @@ const Holdings = () => {
 
     return (
         <>
-            <h3 className="title">Holdings ({allHoldings.length})</h3>
+            <h3 className="title">
+                Holdings ({isAuthed ? allHoldings.length : 0})
+            </h3>
+
+            {!isAuthed && (
+                <div className="alert alert-warning">
+                    Please log in to view your holdings.
+                </div>
+            )}
 
             <div className="order-table">
                 <table>
@@ -61,30 +84,32 @@ const Holdings = () => {
                         <th>Day chg.</th>
                     </tr>
 
-                    {allHoldings.map((stock, index) => {
-                        const curValue = stock.price * stock.qty;
-                        const isProfit =
-                            curValue - stock.avg * stock.qty >= 0.0;
-                        const profClass = isProfit ? "profit" : "loss";
-                        const dayClass = stock.isLoss ? "loss" : "profit";
+                    {isAuthed &&
+                        allHoldings.map((stock, index) => {
+                            const curValue = stock.price * stock.qty;
+                            const isProfit =
+                                curValue - stock.avg * stock.qty >= 0.0;
+                            const profClass = isProfit ? "profit" : "loss";
+                            const dayClass = stock.isLoss ? "loss" : "profit";
 
-                        return (
-                            <tr key={index}>
-                                <td>{stock.name}</td>
-                                <td>{stock.qty}</td>
-                                <td>{stock.avg.toFixed(2)}</td>
-                                <td>{stock.price.toFixed(2)}</td>
-                                <td>{curValue.toFixed(2)}</td>
-                                <td className={profClass}>
-                                    {(curValue - stock.avg * stock.qty).toFixed(
-                                        2
-                                    )}
-                                </td>
-                                <td className={profClass}>{stock.net}</td>
-                                <td className={dayClass}>{stock.day}</td>
-                            </tr>
-                        );
-                    })}
+                            return (
+                                <tr key={index}>
+                                    <td>{stock.name}</td>
+                                    <td>{stock.qty}</td>
+                                    <td>{stock.avg.toFixed(2)}</td>
+                                    <td>{stock.price.toFixed(2)}</td>
+                                    <td>{curValue.toFixed(2)}</td>
+                                    <td className={profClass}>
+                                        {(
+                                            curValue -
+                                            stock.avg * stock.qty
+                                        ).toFixed(2)}
+                                    </td>
+                                    <td className={profClass}>{stock.net}</td>
+                                    <td className={dayClass}>{stock.day}</td>
+                                </tr>
+                            );
+                        })}
                 </table>
             </div>
 
@@ -106,7 +131,7 @@ const Holdings = () => {
                     <p>P&L</p>
                 </div>
             </div>
-            <VerticalGraph data={data} />
+            {isAuthed && <VerticalGraph data={data} />}
         </>
     );
 };
