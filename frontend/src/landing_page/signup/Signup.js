@@ -21,7 +21,9 @@ function Signup() {
             if (!res.ok) return setError(data.error || "Signup failed");
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
-            navigate("/");
+            
+            // Redirect to trading dashboard port (3008) and pass auth tokens securely via url params
+            window.location.href = `http://localhost:3008/?token=${data.token}&user=${encodeURIComponent(JSON.stringify(data.user))}`;
         } catch (err) {
             setError("Network error");
         }

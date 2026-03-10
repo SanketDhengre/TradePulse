@@ -116,13 +116,13 @@ const Holdings = () => {
             <div className="row">
                 <div className="col">
                     <h5>
-                        29,875.<span>55</span>{" "}
+                        29,875.<span style={{ display: 'inline' }}>55</span>
                     </h5>
                     <p>Total investment</p>
                 </div>
                 <div className="col">
                     <h5>
-                        31,428.<span>95</span>{" "}
+                        31,428.<span style={{ display: 'inline' }}>95</span>
                     </h5>
                     <p>Current value</p>
                 </div>
