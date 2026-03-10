@@ -1,7 +1,5 @@
 # TradePulse
 
-🚀 **Live Project:** [https://frontend-gamma-five-34.vercel.app/](https://frontend-gamma-five-34.vercel.app/)
-
 **TradePulse** is a small full‑stack trading dashboard and landing site project composed of:
 
 - backend — Express + Mongoose API that stores holdings, positions and orders (MongoDB)
@@ -14,6 +12,7 @@ This README explains how the project is organized, how to run it locally, how th
 
 ## Table of contents
 
+- [Live Application](#live-application-)
 - [Features](#features)
 - [Project structure](#project-structure)
 - [Tech stack](#tech-stack)
@@ -31,11 +30,19 @@ This README explains how the project is organized, how to run it locally, how th
 
 ---
 
+## Live Application 🚀
+
+- **Frontend (Landing Site):** [https://frontend-gamma-five-34.vercel.app/](https://frontend-gamma-five-34.vercel.app/)
+- **Dashboard:** [https://dashboard-pi-sand.vercel.app/](https://dashboard-pi-sand.vercel.app/)
+- **Backend API:** [https://tradepulse-kcou.onrender.com](https://tradepulse-kcou.onrender.com)
+
+---
+
 ## Features ✅
 
-- Simple REST API with endpoints to get holdings/positions and post new orders
-- Dashboard with charts and interactive watchlist, holdings and positions views
-- Landing pages for marketing / information
+- Secure REST API with JWT Authentication and endpoints to get holdings/positions and post new orders
+- Dashboard with real-time charts, interactive watchlist, holdings, and positions views
+- Landing pages for marketing, information, signup, and login
 
 ---
 
@@ -125,11 +132,13 @@ npm start
 
 ## API 📡
 
-Endpoints provided by the backend (default `http://localhost:3002`):
+Endpoints provided by the backend (default `http://localhost:3002` or `https://tradepulse-kcou.onrender.com`):
 
-- `GET /allHoldings` — Returns all holdings documents (array)
-- `GET /allPositions` — Returns all positions documents (array)
-- `POST /newOrder` — Create a new order. Example body (JSON):
+- `POST /signup` — Register a new user and return a JWT token
+- `POST /login` — Authenticate an existing user and return a JWT token
+- `GET /allHoldings` — Returns all holdings documents (array). Requires Bearer token.
+- `GET /allPositions` — Returns all positions documents (array). Requires Bearer token.
+- `POST /newOrder` — Create a new order. Requires Bearer token. Example body (JSON):
 
 ```json
 {
