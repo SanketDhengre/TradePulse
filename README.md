@@ -1,5 +1,7 @@
 # TradePulse
 
+🚀 **Live Project:** [https://frontend-gamma-five-34.vercel.app/](https://frontend-gamma-five-34.vercel.app/)
+
 **TradePulse** is a small full‑stack trading dashboard and landing site project composed of:
 
 - backend — Express + Mongoose API that stores holdings, positions and orders (MongoDB)
