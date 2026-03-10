@@ -17,7 +17,7 @@ const Holdings = () => {
         }
         setIsAuthed(true);
         axios
-            .get("http://localhost:3002/allHoldings", {
+            .get("https://tradepulse-kcou.onrender.com/allHoldings", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => {

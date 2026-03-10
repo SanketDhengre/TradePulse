@@ -11,7 +11,7 @@ function Login() {
         e.preventDefault();
         setError("");
         try {
-            const res = await fetch("http://localhost:3002/login", {
+            const res = await fetch("https://tradepulse-kcou.onrender.com/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -22,7 +22,7 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(data.user));
             
             // Redirect to trading dashboard port (3008) and pass auth tokens securely via url params
-            window.location.href = `http://localhost:3008/?token=${data.token}&user=${encodeURIComponent(JSON.stringify(data.user))}`;
+            window.location.href = `https://dashboard-pi-sand.vercel.app/?token=${data.token}&user=${encodeURIComponent(JSON.stringify(data.user))}`;
         } catch (err) {
             setError("Network error");
         }

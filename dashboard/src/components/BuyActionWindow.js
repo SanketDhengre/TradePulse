@@ -21,7 +21,7 @@ const BuyActionWindow = ({ uid }) => {
 
         axios
             .post(
-                "http://localhost:3002/newOrder",
+                "https://tradepulse-kcou.onrender.com/newOrder",
                 {
                     name: uid,
                     qty: stockQuantity,

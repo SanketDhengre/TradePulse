@@ -27,7 +27,7 @@ const Menu = () => {
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        window.location.href = "http://localhost:3000/login";
+        window.location.href = "https://frontend-gamma-five-34.vercel.app/login";
     };
 
     const menuClass = "menu";
@@ -160,13 +160,13 @@ const Menu = () => {
                     <div style={{ display: "flex", gap: 8 }}>
                         <a
                             className="btn btn-outline"
-                            href="http://localhost:3000/login"
+                            href="https://frontend-gamma-five-34.vercel.app/login"
                         >
                             Login
                         </a>
                         <a
                             className="btn btn-primary"
-                            href="http://localhost:3000/signup"
+                            href="https://frontend-gamma-five-34.vercel.app/signup"
                         >
                             Signup
                         </a>
